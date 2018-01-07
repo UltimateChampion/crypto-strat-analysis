@@ -8,7 +8,7 @@ class PoloniexExchange(Exchange):
 
 	def __init__(self, apiKey):
 		super(PoloniexExchange, self).__init__(apiKey)
-		self.exchangeName = "Poloniex"
+		self.exchangeName = "Coinbase"
 
 	def getUSDPrice(self, coin):
 		polo = Poloniex()
