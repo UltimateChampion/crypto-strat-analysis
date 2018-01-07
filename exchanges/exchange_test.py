@@ -20,11 +20,11 @@ def generatePriceReport(exchanges, interval = 5):
 	print(header)
 		
 	i = 0
-	iEnd = 20
+	iEnd = 10
 	while i < iEnd:
 		exchangeVisitResult = visitExchanges(exchanges)
 		if exchangeVisitResult:
-			dataPoint = [datetime.now().strftime('%Y-%m-%d %H:%M:%S')] + [exchangeVisitResult[ex] for ex in exchanges]
+			dataPoint = [datetime.now().strftime('%Y-%m-%d %H:%M:%S')] + [str(exchangeVisitResult[ex]) for ex in exchanges]
 			print(",".join(dataPoint))
 			i += 1
 		sleep(interval)
