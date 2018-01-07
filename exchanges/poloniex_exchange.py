@@ -1,5 +1,5 @@
 from exchange import *
-from poloniex import *
+from poloniex import Poloniex
 
 class PoloniexExchange(Exchange):
 

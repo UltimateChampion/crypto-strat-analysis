@@ -1,5 +1,4 @@
 from exchange import *
-from coinbase import *
 
 class CoinbaseExchange(Exchange):
 
