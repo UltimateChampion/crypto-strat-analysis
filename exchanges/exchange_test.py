@@ -5,16 +5,20 @@ from kraken_exchange import *
 from time import *
 from datetime import *
 
-def visitExchanges(exchanges):
+import sys
+import argparse
+
+def visitExchanges(exchanges, coin):
 	exchangePriceDict = {}
 	for exchange in exchanges:
 		try:
-			exchangePriceDict[exchange] = exchange.getUSDPrice("BTC")
+			exchangePriceDict[exchange] = exchange.getUSDPrice(coin)
 		except:
+			raise
 			return None
 	return exchangePriceDict
 		
-def generatePriceReport(exchanges, interval = 5):
+def generatePriceReport(exchanges, coin, interval = 5):
 	exchangeList = ",".join([exchange.__str__() for exchange in exchanges])
 	header = "Time,{}".format(exchangeList)
 	print(header)
@@ -22,7 +26,7 @@ def generatePriceReport(exchanges, interval = 5):
 	i = 0
 	iEnd = 10
 	while i < iEnd:
-		exchangeVisitResult = visitExchanges(exchanges)
+		exchangeVisitResult = visitExchanges(exchanges, coin)
 		if exchangeVisitResult:
 			dataPoint = [datetime.now().strftime('%Y-%m-%d %H:%M:%S')] + [str(exchangeVisitResult[ex]) for ex in exchanges]
 			print(",".join(dataPoint))
@@ -30,20 +34,19 @@ def generatePriceReport(exchanges, interval = 5):
 		sleep(interval)
 		
 
-def main():
+def main(argv):
+	parser = argparse.ArgumentParser(description='Generate Price Information for Exchanges over 50 seconds at 5 second intervals')
+	parser.add_argument('-c', type=str, choices=["BTC", "ETH", "LTC"], help='Coin to Check Price For', required=True)
+
+	args = parser.parse_args()
+
 	e = Exchange("apiKey")
 	cb = CoinbaseExchange("apiKey")
 	d = DummyExchange("apiKey")
 	p = PoloniexExchange("apiKey")
 	k = KrakenExchange("apiKey")
 
-	#print(e.getUSDPrice("BTC"))
-	#print(cb.getUSDPrice("BTC"))
-	#print(d.getUSDPrice("BTC"))
-	#print(p.getUSDPrice("BTC"))
-	#print(k.getUSDPrice("BTC"))
-
-	generatePriceReport([p, k])
+	generatePriceReport([p, k], args.c)
 
 if __name__ == '__main__':
-	main()
+	main(sys.argv)

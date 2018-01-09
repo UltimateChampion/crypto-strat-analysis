@@ -3,6 +3,12 @@ import krakenex
 
 class KrakenExchange(Exchange):
 
+	coinDict = {
+		"BTC" : "XXBTZUSD",
+		"ETH" : "XETHZUSD",
+		"LTC" : "XLTCZUSD"
+	}
+
 	def __str__(self):
 		return super(KrakenExchange, self).__str__()
 
@@ -10,8 +16,14 @@ class KrakenExchange(Exchange):
 		super(KrakenExchange, self).__init__(apiKey)
 		self.exchangeName = "Kraken"
 
-	def getUSDPrice(self, coin):
+	def getUSDBidAskPrice(self, coin):
 		kraken = krakenex.API()
-		result = kraken.query_public('Ticker', {'pair' : 'XXBTZUSD'})['result']['XXBTZUSD']
-		return (float(result["b"][0]) + float(result["a"][0]))*0.5
+		
+		pair = self.coinDict[coin]
 
+		result = kraken.query_public('Ticker', {'pair' : pair})['result'][pair]
+		return [float(result["b"][0]), float(result["a"][0])]
+
+	def getUSDPrice(self, coin):
+		bidAskPrices = self.getUSDBidAskPrice(coin)
+		return (bidAskPrices[0] + bidAskPrices[1]) * 0.5
