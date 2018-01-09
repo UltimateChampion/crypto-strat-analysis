@@ -7,7 +7,10 @@ class DummyExchange(Exchange):
 
 	def __init__(self, apiKey):
 		super(DummyExchange, self).__init__(apiKey)
-		self.exchangeName = "Coinbase"
+		self.exchangeName = "Dummy Exchange"
+
+	def getBidAskPrice(self, coin):
+		super(DummyExchange, self).getBidAskPrice(coin)
 
 	def getUSDPrice(self, coin):
-		return random.random() * 16000
+		super(DummyExchange, self).getUSDPrice(coin)
